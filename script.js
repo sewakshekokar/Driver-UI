@@ -9,8 +9,8 @@ const rides = [
   {
     priority: false,
     fare: "₹138.39",
-    pickup: "G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
-    dropoff: "Zsquare, Mall Rd, Downtown, Kanpur, Uttar Pradesh 208001",
+    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    dropoff: "Z Square Mall, Mall Rd, Downtown, Kanpur, Uttar Pradesh 208001",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.47363172825254, 80.3526459430123],
     time: "27 mins",
@@ -19,8 +19,8 @@ const rides = [
   {
     priority: true,
     fare: "₹173.00",
-    pickup: "G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
-    dropoff: "central railway station, Kanpur",
+    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    dropoff: "Kanpur Central Railway Station, central railway station, Kanpur",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.456144881546738, 80.35043147788303],
     time: "29 mins",
@@ -29,12 +29,22 @@ const rides = [
   {
     priority: true,
     fare: "₹173.00",
-    pickup: "G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
-    dropoff: "Amausi, Lucknow, Uttar Pradesh 226009",
+    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    dropoff: "Chaudhary Charan Singh International Airport, Amausi, Lucknow, Uttar Pradesh 226009",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.761937431431722, 80.88558312698392],
     time: "2hr 21 mins",
     distance: "91.9 km"
+  },
+  {
+    priority: false,
+    fare: "₹138.39",
+    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    dropoff: "J.K. Temple, P, GT Rd, Khyora, Kanpur, Uttar Pradesh 208024",
+    pickupCoords: [26.511052416556655, 80.24688755767203],
+    dropoffCoords: [26.475642774065843, 80.3058759436053],
+    time: "27 mins",
+    distance: "14.5 km"
   }
 ];
 
