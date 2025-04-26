@@ -201,3 +201,45 @@
     font-size: 13px;
   }
   
+  @media (max-width: 600px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .app-title {
+      font-size: 20px;
+      padding: 10px;
+    }
+  
+    .map-container {
+      height: 200px;
+    }
+  
+    .ride-card {
+      padding: 15px;
+      border-radius: 12px;
+    }
+  
+    .ride-header-pill {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
+  
+    .ride-price {
+      font-size: 22px;
+    }
+  
+    .ride-subtext {
+      font-size: 10px;
+    }
+  
+    .location, .note, .star, .info-address, .info-text {
+      font-size: 12px;
+    }
+  
+    .accept, .decline {
+      font-size: 14px;
+      padding: 8px;
+    }
+  }
+  
