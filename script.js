@@ -4,11 +4,11 @@ let dropoffCoords = [26.473499195676375, 80.35282512883602];
 let showingPriority = false;
 let currentRide = null;
 let currentRideIndex = 0;
-
+// 115.17 = 
 const rides = [
   {
     priority: false,
-    fare: "₹138.39",
+    fare: "₹318.39",
     pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
     dropoff: "Z Square Mall, Mall Rd, Downtown, Kanpur, Uttar Pradesh 208001",
     pickupCoords: [26.511052416556655, 80.24688755767203],
@@ -18,7 +18,17 @@ const rides = [
   },
   {
     priority: true,
-    fare: "₹173.00",
+    fare: "₹143.96",
+    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    dropoff: "SPM Hospital Research & Trauma Centre, C - 46-50, New Azad Nagar, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    pickupCoords: [26.511052416556655, 80.24688755767203],
+    dropoffCoords: [26.501291743719378, 80.25760280000002],
+    time: "2hr 21 mins",
+    distance: "91.9 km"
+  },
+  {
+    priority: true,
+    fare: "₹387.22",
     pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
     dropoff: "Kanpur Central Railway Station, central railway station, Kanpur",
     pickupCoords: [26.511052416556655, 80.24688755767203],
@@ -27,24 +37,24 @@ const rides = [
     distance: "15.0 km"
   },
   {
-    priority: true,
-    fare: "₹173.00",
-    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
-    dropoff: "Chaudhary Charan Singh International Airport, Amausi, Lucknow, Uttar Pradesh 226009",
-    pickupCoords: [26.511052416556655, 80.24688755767203],
-    dropoffCoords: [26.761937431431722, 80.88558312698392],
-    time: "2hr 21 mins",
-    distance: "91.9 km"
-  },
-  {
     priority: false,
-    fare: "₹138.39",
+    fare: "₹231.16",
     pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
     dropoff: "J.K. Temple, P, GT Rd, Khyora, Kanpur, Uttar Pradesh 208024",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.475642774065843, 80.3058759436053],
     time: "27 mins",
     distance: "14.5 km"
+  },
+  {
+    priority: true,
+    fare: "₹1,433.48",
+    pickup: "Hall of Residence 14, G66W+8PH, Near IIT Kanpur, Kalyanpur, Kanpur, Uttar Pradesh 208017",
+    dropoff: "Chaudhary Charan Singh International Airport, Amausi, Lucknow, Uttar Pradesh 226009",
+    pickupCoords: [26.511052416556655, 80.24688755767203],
+    dropoffCoords: [26.761937431431722, 80.88558312698392],
+    time: "2hr 21 mins",
+    distance: "91.9 km"
   }
 ];
 
@@ -57,23 +67,22 @@ function updateMap() {
     }).addTo(map);
   }
 
+  // Remove old markers and lines
   map.eachLayer(layer => {
     if (layer instanceof L.Marker || layer instanceof L.Polyline) {
       map.removeLayer(layer);
     }
   });
 
+  // Create slight random offset for driver marker
+  const offsetLat = pickupCoords[0] + (Math.random() * 0.01 - 0.01); // small random offset
+  const offsetLng = pickupCoords[1] + (Math.random() * 0.01 - 0.015);
+  const driverCoords = [offsetLat, offsetLng];
+  
+  // Markers
   L.marker(pickupCoords).addTo(map).bindPopup('Pickup');
   L.marker(dropoffCoords).addTo(map).bindPopup('Dropoff');
-
-  routeLine = L.polyline([pickupCoords, dropoffCoords], {
-    color: 'blue',
-    weight: 4,
-    opacity: 0.7,
-    dashArray: '10,10'
-  }).addTo(map);
-
-  driverMarker = L.marker(pickupCoords, {
+  driverMarker = L.marker(driverCoords, {
     icon: L.icon({
       iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
       iconSize: [40, 40],
@@ -81,29 +90,46 @@ function updateMap() {
     })
   }).addTo(map).bindPopup("Driver");
 
-  map.fitBounds([pickupCoords, dropoffCoords], { padding: [30, 30] });
+   // Lines
+   const pickupToDropoff = L.polyline([pickupCoords, dropoffCoords], {
+    color: 'blue',
+    weight: 4,
+    opacity: 0.8,
+    dashArray: '10,10'
+  }).addTo(map);
 
-  simulateDriver();
+  const driverToPickup = L.polyline([driverCoords, pickupCoords], {
+    color: 'green',
+    weight: 4,
+    opacity: 0.8,
+    dashArray: '5,8'
+  }).addTo(map);
+  
+  // Correct fitting only on real markers
+  const bounds = L.latLngBounds([pickupCoords, dropoffCoords, driverCoords]);
+  map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 }); // LIMIT zoom
+
+  // simulateDriver();
 }
 
-function simulateDriver() {
-  const steps = [
-    pickupCoords,
-    [26.500, 80.270],
-    [26.490, 80.300],
-    dropoffCoords,
-  ];
-  let index = 0;
+// function simulateDriver() {
+//   const steps = [
+//     pickupCoords,
+//     [26.500, 80.270],
+//     [26.490, 80.300],
+//     dropoffCoords,
+//   ];
+//   let index = 0;
 
-  const move = setInterval(() => {
-    if (index >= steps.length) {
-      clearInterval(move);
-    } else {
-      driverMarker.setLatLng(steps[index]);
-      index++;
-    }
-  }, 2000);
-}
+//   const move = setInterval(() => {
+//     if (index >= steps.length) {
+//       clearInterval(move);
+//     } else {
+//       driverMarker.setLatLng(steps[index]);
+//       index++;
+//     }
+//   }, 2000);
+// }
 
 function renderRide() {
   const ride = rides[currentRideIndex];
@@ -219,7 +245,9 @@ function reportEmergency() {
     <div class="ride-header">
       <div class="price">⚠️ Emergency Report</div>
     </div>
-     <p class="note large-note">You’re canceling a priority ride.<br><strong>There will be a 100% penalty.</strong></p>
+     <p class="note large-note">You’re canceling a priority ride.<br>
+                                <strong>There will be a 100% penalty if you are reporting a false emergency.</strong><br>
+                                <strong>The app will be placed on hold.</strong></p>
 
     <div class="otp-section">
       <label for="emergencyReason">Select reason</label>
@@ -227,8 +255,6 @@ function reportEmergency() {
         <option value="">-- Choose a reason --</option>
         <option value="vehicle">🚗 Vehicle Breakdown</option>
         <option value="health">🤒 Health Issue</option>
-        <option value="personal">🏠 Personal Emergency</option>
-        <option value="other">❓ Other</option>
       </select>
     </div>
 
@@ -245,18 +271,35 @@ function submitEmergency() {
     return;
   }
 
-  alert("Emergency reported. The app will now be placed on hold.");
+  alert("Emergency reported. Your app is being put on hold.");
+  document.getElementById('map').style.display = "none";
+
   document.getElementById('rideCard').innerHTML = `
     <div class="ride-header">
       <div class="price">🚫 App On Hold</div>
     </div>
-    <p class="note large-note">You have reported an emergency. Please resolve your situation before continuing to use the app.</p>
-    <p class="location">Support has been notified. Stay safe. 🕊️</p>
-    <button class="accept" onclick="resumeApp()">Resume App</button>
+
+    <div class="on-hold-section">
+      <div class="spinner"></div>
+      <p class="note">Verifying your emergency report...</p>
+      <p class="location">Support team has been notified. Please wait patiently.</p>
+
+      <div class="buttons">
+        <button id="resumeButton" class="accept" onclick="resumeApp()" disabled>Resume App</button>
+      </div>
+    </div>
   `;
 
-  document.getElementById('map').style.display = "none";
+  // Simulate verification (after 10 seconds)
+  setTimeout(() => {
+    const resumeButton = document.getElementById('resumeButton');
+    if (resumeButton) {
+      resumeButton.disabled = false;
+      resumeButton.innerText = "Resume App (Verified)";
+    }
+  }, 5000); // 3 seconds
 }
+
 
 function resumeApp() {
   document.getElementById('map').style.display = "block";
