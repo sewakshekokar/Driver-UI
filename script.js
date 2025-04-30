@@ -165,10 +165,9 @@ function acceptRide() {
       <div class="price">✅ <strong>Ride Accepted</strong></div>
       ${badgeHTML}
     </div>
-    <p class="note">You're on your way to the pickup location.</p>
-    <p class="location">Pickup: ${currentRide.pickup}</p>
-    <p class="location">Dropoff: ${currentRide.dropoff}</p>
-    <p class="location">Trip: ${currentRide.distance} · ETA: ${currentRide.time}</p>
+    <p class="location">You're on your way to the pickup location.</p>
+    <p class="location"><strong>Pickup: </strong>${currentRide.pickup}</p>
+    <p class="location">${currentRide.time} away</p>
 
     <div class="otp-section" id="otpSection">
       <label for="otpInput">Enter 4-digit OTP</label>
@@ -203,7 +202,38 @@ function validateOTP(input) {
       const otpSection = document.getElementById("otpSection");
       if (otpSection) otpSection.remove();
     }, 100); // 100ms delay feels smooth
+    acceptedRide()
   }
+}
+
+function acceptedRide() {
+  currentRide = rides[currentRideIndex];
+
+  const cancelButton = currentRide.priority
+  ? `<button class="decline" disabled>Cancel Disabled</button>
+  <button class="decline" onclick="reportEmergency()">Report Emergency</button>`
+  : `<button class="decline" onclick="cancelRide()">Cancel Ride</button>`;
+  
+  const badgeHTML = currentRide.priority ? `<span class="badge">PRIORITY</span>` : "";
+
+  document.getElementById('rideCard').innerHTML = `
+    <div class="ride-header">
+      <div class="price">✅ <strong>Ride Started</strong></div>
+      ${badgeHTML}
+    </div>
+    <p class="location"><strong>Dropoff: </strong>${currentRide.dropoff}</p>
+    <p class="location"><strong>Trip: </strong>${currentRide.distance}</p>
+
+
+    <div class="otp-section" id="otpSection">
+      <label for="otpInput">Enter 4-digit OTP</label>
+      <input type="text" id="otpInput" maxlength="4" placeholder="____" oninput="validateOTP(this)">
+    </div>
+
+    <div class="buttons">
+      ${cancelButton}
+    </div>
+  `;
 }
 
 function cancelRide() {
@@ -225,7 +255,7 @@ function reportEmergency() {
     <div class="ride-header">
       <div class="price">⚠️ Emergency Report</div>
     </div>
-     <p class="note large-note">You’re canceling a priority ride.<br>
+     <p class="location large-note">You’re canceling a priority ride.<br>
                                 <strong>There will be a 100% penalty if you are reporting a false emergency.</strong><br>
                                 <strong>The app will be placed on hold.</strong></p>
 
@@ -270,16 +300,37 @@ function submitEmergency() {
     </div>
   `;
 
-  // Simulate verification (after 10 seconds)
   setTimeout(() => {
     const resumeButton = document.getElementById('resumeButton');
+    const spinner = document.querySelector('.spinner');
+    const note = document.querySelector('.note');
+    const onHoldSection = document.querySelector('.on-hold-section');
+    const extraNote = document.querySelector('.location');
+    const header = document.querySelector('.ride-header .price');
+  
     if (resumeButton) {
       resumeButton.disabled = false;
-      resumeButton.innerText = "Resume App (Verified)";
+      resumeButton.innerText = "Resume App";
     }
-  }, 5000); // 3 seconds
+  
+    if (spinner) spinner.remove();
+    if (extraNote) extraNote.remove();
+  
+    if (header) header.innerHTML = "✅ Emergency Verified";
+  
+    if (onHoldSection) {
+      const tick = document.createElement('div');
+      tick.className = 'verified-icon';
+      tick.innerHTML = '✅';
+      onHoldSection.prepend(tick);
+  
+      if (note) {
+        note.classList.add('success');
+        note.innerText = "Your emergency was verified. You may resume the app.";
+      }
+    }
+  }, 5000); // Simulate 5 seconds for verification
 }
-
 
 function resumeApp() {
   document.getElementById('map').style.display = "block";
