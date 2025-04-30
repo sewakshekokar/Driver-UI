@@ -1,4 +1,4 @@
-  body {
+body {
     font-family: 'Arial', sans-serif;
     background-color: #ffffff;
     color: #000;
@@ -73,9 +73,15 @@
     100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
   }
   
-  .note, .star, .location {
+  .note, .star {
     font-size: 14px;
-    color: #444;
+    color: #1900ff;
+    margin: 6px 0;
+  }
+
+  .location {
+    font-size: 14px;
+    color: #000000;
     margin: 6px 0;
   }
   
@@ -270,4 +276,21 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
-
+  
+  .verified-icon {
+    font-size: 48px;
+    color: green;
+    margin-bottom: 10px;
+    animation: pop 0.4s ease-in-out;
+  }
+  
+  @keyframes pop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .note.success {
+    color: green;
+    font-weight: bold;
+    font-size: 16px;
+  }
