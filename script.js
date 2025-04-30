@@ -4,7 +4,7 @@ let dropoffCoords = [26.473499195676375, 80.35282512883602];
 let showingPriority = false;
 let currentRide = null;
 let currentRideIndex = 0;
-// 115.17 = 
+
 const rides = [
   {
     priority: false,
@@ -13,8 +13,8 @@ const rides = [
     dropoff: "Z Square Mall, Mall Rd, Downtown, Kanpur, Uttar Pradesh 208001",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.47363172825254, 80.3526459430123],
-    time: "27 mins",
-    distance: "14.5 km"
+    time: "2 mins",
+    distance: "27 mins (14.5 km)"
   },
   {
     priority: true,
@@ -23,8 +23,8 @@ const rides = [
     dropoff: "SPM Hospital Research & Trauma Centre, C - 46-50, New Azad Nagar, Kalyanpur, Kanpur, Uttar Pradesh 208017",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.501291743719378, 80.25760280000002],
-    time: "2hr 21 mins",
-    distance: "91.9 km"
+    time: "3 mins",
+    distance: "2hr 21 mins (91.9 km)"
   },
   {
     priority: true,
@@ -33,8 +33,8 @@ const rides = [
     dropoff: "Kanpur Central Railway Station, central railway station, Kanpur",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.456144881546738, 80.35043147788303],
-    time: "29 mins",
-    distance: "15.0 km"
+    time: "5 mins",
+    distance: "29 mins (15.0 km)"
   },
   {
     priority: false,
@@ -43,8 +43,8 @@ const rides = [
     dropoff: "J.K. Temple, P, GT Rd, Khyora, Kanpur, Uttar Pradesh 208024",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.475642774065843, 80.3058759436053],
-    time: "27 mins",
-    distance: "14.5 km"
+    time: "1 mins",
+    distance: "27 mins (14.5 km)"
   },
   {
     priority: true,
@@ -53,8 +53,8 @@ const rides = [
     dropoff: "Chaudhary Charan Singh International Airport, Amausi, Lucknow, Uttar Pradesh 226009",
     pickupCoords: [26.511052416556655, 80.24688755767203],
     dropoffCoords: [26.761937431431722, 80.88558312698392],
-    time: "2hr 21 mins",
-    distance: "91.9 km"
+    time: "5 mins",
+    distance: "2hr 21 mins (91.9 km)"
   }
 ];
 
@@ -63,7 +63,7 @@ function updateMap() {
     map = L.map('map').setView(pickupCoords, 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '© OpenStreetMap',
+      attribution: '©️ OpenStreetMap',
     }).addTo(map);
   }
 
@@ -108,28 +108,7 @@ function updateMap() {
   // Correct fitting only on real markers
   const bounds = L.latLngBounds([pickupCoords, dropoffCoords, driverCoords]);
   map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 }); // LIMIT zoom
-
-  // simulateDriver();
 }
-
-// function simulateDriver() {
-//   const steps = [
-//     pickupCoords,
-//     [26.500, 80.270],
-//     [26.490, 80.300],
-//     dropoffCoords,
-//   ];
-//   let index = 0;
-
-//   const move = setInterval(() => {
-//     if (index >= steps.length) {
-//       clearInterval(move);
-//     } else {
-//       driverMarker.setLatLng(steps[index]);
-//       index++;
-//     }
-//   }, 2000);
-// }
 
 function renderRide() {
   const ride = rides[currentRideIndex];
@@ -144,6 +123,7 @@ function renderRide() {
   document.getElementById('rideCard').innerHTML = `
   <div class="ride-card-content">
     <div class="ride-price">${ride.fare}</div>
+    <div><strong>${note}</strong></div>
     <hr class="divider" />
 
     <div class="ride-info">
