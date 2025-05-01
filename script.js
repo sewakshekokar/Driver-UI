@@ -4,6 +4,8 @@ let dropoffCoords = [26.473499195676375, 80.35282512883602];
 let showingPriority = false;
 let currentRide = null;
 let currentRideIndex = 0;
+let driverToPickupLine = null;
+
 
 const rides = [
   {
@@ -98,7 +100,7 @@ function updateMap() {
     dashArray: '10,10'
   }).addTo(map);
 
-  const driverToPickup = L.polyline([driverCoords, pickupCoords], {
+  driverToPickupLine = L.polyline([driverCoords, pickupCoords], {
     color: 'green',
     weight: 4,
     opacity: 0.8,
@@ -118,7 +120,7 @@ function renderRide() {
   updateMap();
 
   const badgeHTML = ride.priority ? `<span class="badge">PRIORITY</span>` : "";
-  const note = ride.priority ? `<p class="note">You are getting 25% more than usual</p>` : "";
+  const note = ride.priority ? `<p class="note">(25% more than usual)</p>` : "";
 
   document.getElementById('rideCard').innerHTML = `
   <div class="ride-card-content">
@@ -152,10 +154,21 @@ function renderRide() {
 
 function acceptRide() {
   currentRide = rides[currentRideIndex];
+  
+  // Move driver marker to pickupCoords
+  if (driverMarker) {
+    driverMarker.setLatLng(pickupCoords);
+  }
+
+  if (driverToPickupLine) {
+    map.removeLayer(driverToPickupLine);
+    driverToPickupLine = null;
+  }
+  
 
   const cancelButton = currentRide.priority
   ? `<button class="decline" disabled>Cancel Disabled</button>
-  <button class="decline" onclick="reportEmergency()">Report Emergency</button>`
+     <button class="decline" onclick="reportEmergency()">Report Emergency</button>`
   : `<button class="decline" onclick="cancelRide()">Cancel Ride</button>`;
   
   const badgeHTML = currentRide.priority ? `<span class="badge">PRIORITY</span>` : "";
